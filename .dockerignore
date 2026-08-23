@@ -1,0 +1,11 @@
+node_modules
+.next
+.git
+.DS_Store
+.env
+__pycache__
+*.pyc
+*.pyo
+archive/
+repo_dump/
+audit/

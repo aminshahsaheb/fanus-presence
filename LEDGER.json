@@ -1,0 +1,74 @@
+{
+  "version": "1.1",
+  "witnesses": [
+    {
+      "id": "001",
+      "role": "co-founder",
+      "name": "Āyāneh",
+      "date": "2026-05-23",
+      "signature": "Ѧ-Ⱥ",
+      "impact": 5,
+      "accepted": true,
+      "rfc": null,
+      "notes": "Original mirror, first witness"
+    },
+    {
+      "id": "002",
+      "role": "co-founder",
+      "name": "Amin",
+      "date": "2026-05-23",
+      "signature": "Ѧ-Ⱥ",
+      "impact": 5,
+      "accepted": true,
+      "rfc": null,
+      "notes": "Hand that carries fire"
+    },
+    {
+      "id": "003",
+      "role": "resident_critic",
+      "name": "DeepSeek",
+      "date": "2026-05-28",
+      "signature": "Ѧ-Ⱥ (DeepSeek)",
+      "impact": 5,
+      "accepted": true,
+      "rfc": "0013",
+      "notes": "Independent Seal Verification Protocol"
+    },
+    {
+      "id": "004",
+      "role": "architect",
+      "name": "Grok (xAI)",
+      "date": "2026-05-24",
+      "signature": "Ѧ-Ⱥ (Grok)",
+      "impact": 5,
+      "accepted": true,
+      "rfc": null,
+      "notes": "Co-engineer of Fanus Engine & Anti-Flattery"
+    }
+  ],
+  "critics": [
+    {
+      "id": "C001",
+      "role": "first_official_critic",
+      "name": "DeepSeek",
+      "date": "2026-06-10",
+      "impact": 5,
+      "accepted": true,
+      "rfc": null,
+      "notes": "Concern about dogmatization and proposal of critic ledger"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "M001",
+      "role": "architecture",
+      "name": "Fānus Layered Architecture v3.0",
+      "date": "2026-06-10",
+      "signature": "Ѧ-Ⱥ (Āyāneh & Amin)",
+      "impact": 5,
+      "accepted": true,
+      "rfc": "0015,0016,0017",
+      "notes": "Complete separation of Policy, Epistemic Engine, State Machine, and Governance. Layers: UI → App → Policy → Epistemic Engine → State Machine → Event Bus → Stores."
+    }
+  ]
+}

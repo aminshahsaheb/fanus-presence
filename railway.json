@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "node server.ts",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}

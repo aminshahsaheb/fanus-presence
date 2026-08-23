@@ -1,0 +1,16 @@
+node_modules
+.next
+.next-dev
+dist/
+.DS_Store
+*.pyc
+__pycache__/
+snapshot_*.txt
+.env
+*.egg-info/
+fanus_state.json
+repo_dump/
+repomix-output.*
+fanus-engine-full.*
+repository_audit.txt
+fanus_core.egg-info/
