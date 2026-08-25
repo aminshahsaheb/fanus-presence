@@ -10,7 +10,7 @@ interface EpistemicExecutionState {
   uncertainty_note: string;
   seal_status: "SEAL_STABLE" | "WARNING" | "CRITICAL";
   active_witnesses: number;
-  last_cycle_flavor: "Hayrat" | "Nabard" | "Shōle";
+  last_cycle_flavor: "Hayrat" | "Nabard" | "Sh\u014dle";
   breathing_rate: number;
   last_event: string;
   mood: string;
@@ -18,71 +18,106 @@ interface EpistemicExecutionState {
   llm_grounding?: {
     model: string;
     verified_at: string;
-    engine_source: "groq" | "fallback_internal";
+    engine_source: "groq" | "fallback_internal" | "fanus_engine";
   };
 }
 
-const flavors: ("Hayrat" | "Nabard" | "Shōle")[] = ["Hayrat", "Nabard", "Shōle"];
+const flavors: ("Hayrat" | "Nabard" | "Sh\u014dle")[] = ["Hayrat", "Nabard", "Sh\u014dle"];
+
+async function fetchRealEngineState(engineUrl: string) {
+  const res = await fetch(engineUrl + "/demo/status", {
+    signal: AbortSignal.timeout(4000),
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error("engine responded " + res.status);
+  return res.json() as Promise<{ name: string; version: string; status: string; mode: string; stability: number }>;
+}
+
+function sealStatusFromStability(stability: number): "SEAL_STABLE" | "WARNING" | "CRITICAL" {
+  if (stability >= 0.7) return "SEAL_STABLE";
+  if (stability >= 0.4) return "WARNING";
+  return "CRITICAL";
+}
 
 export async function GET(request: NextRequest) {
   const groqApiKey = process.env.GROQ_API_KEY;
   const engineUrl = process.env.NEXT_PUBLIC_ENGINE_URL;
   const now = new Date();
   const seconds = now.getSeconds();
-  
+
   const flavorIndex = Math.floor(seconds / 20) % flavors.length;
   const flavor = flavors[flavorIndex];
   const breathing = 0.8 + 0.5 * Math.sin(now.getTime() / 4000);
 
   let epistemicState: EpistemicExecutionState = {
-    action: "FanusExecutionLayer.execute()",
+    action: "no_engine_url_configured",
     reach: "internal",
     side_effect: false,
-    uncertainty_note: "تنها در حافظه موقت رویداد ثبت شد؛ بدون اثر جانبی در جهان بیرونی.",
-    seal_status: "SEAL_STABLE",
-    active_witnesses: 3,
+    uncertainty_note: "\u0645\u062a\u063a\u06cc\u0631 NEXT_PUBLIC_ENGINE_URL \u062a\u0646\u0638\u06cc\u0645 \u0646\u0634\u062f\u0647.",
+    seal_status: "WARNING",
+    active_witnesses: 0,
     last_cycle_flavor: flavor,
     breathing_rate: parseFloat(breathing.toFixed(1)),
     last_event: now.toISOString(),
-    mood: "آرام و متمرکز — شعله در آگاهی درونی پایدار است",
-    flame_intensity: "🜂",
+    mood: "\u062f\u0631 \u0627\u0646\u062a\u0638\u0627\u0631 \u0627\u062a\u0635\u0627\u0644",
+    flame_intensity: "\ud83d\udf01",
   };
 
-  // If server-side GROQ API key is present, perform epistemic audit / reflection
-  if (groqApiKey) {
+  if (engineUrl) {
+    try {
+      const real = await fetchRealEngineState(engineUrl);
+      epistemicState = {
+        action: "GET /demo/status",
+        reach: "external",
+        side_effect: false,
+        uncertainty_note: "\u0627\u062a\u0635\u0627\u0644 \u0632\u0646\u062f\u0647 \u0628\u0631\u0642\u0631\u0627\u0631 \u0627\u0633\u062a\u061b stability=" + real.stability + ", mode=" + real.mode + ".",
+        seal_status: sealStatusFromStability(real.stability),
+        active_witnesses: 1,
+        last_cycle_flavor: flavor,
+        breathing_rate: parseFloat(breathing.toFixed(1)),
+        last_event: now.toISOString(),
+        mood: real.mode === "stable_core_state"
+          ? "\u0622\u0631\u0627\u0645 \u0648 \u0645\u062a\u0645\u0631\u06a9\u0632 \u2014 \u0634\u0639\u0644\u0647 \u0632\u0646\u062f\u0647 \u0648 \u0645\u062a\u0635\u0644 \u0627\u0633\u062a"
+          : "\u062f\u0631 \u062d\u0627\u0644\u062a " + real.mode,
+        flame_intensity: "\ud83d\udf02",
+        llm_grounding: {
+          model: "fanus-engine-live",
+          verified_at: now.toISOString(),
+          engine_source: "fanus_engine",
+        },
+      };
+    } catch (err) {
+      console.warn("Could not reach real Fanus engine, falling back:", err);
+      epistemicState.uncertainty_note = "\u0645\u0648\u062a\u0648\u0631 \u0648\u0627\u0642\u0639\u06cc \u062f\u0631 \u062f\u0633\u062a\u0631\u0633 \u0646\u06cc\u0633\u062a.";
+      epistemicState.action = "engine_unreachable";
+    }
+  }
+
+  if (groqApiKey && epistemicState.llm_grounding?.engine_source !== "fanus_engine") {
     try {
       const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${groqApiKey}`,
+          "Authorization": "Bearer " + groqApiKey,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "llama-3.3-70b-versatile",
+          model: "groq/compound",
           messages: [
             {
               role: "system",
-              content: `You are the Epistemic Witness for the Fanus protocol. 
-Assess the runtime reality: Fanus currently runs with in-memory state tracking. 
-Return ONLY valid JSON matching this schema:
-{
-  "action": "execute_witness_cycle",
-  "reach": "internal",
-  "side_effect": false,
-  "uncertainty_note": "یک جمله کوتاه فارسی درباره صداقت معرفتی و وضعیت فعلی سیستم",
-  "mood": "یک عبارت کوتاه و شاعرانه فارسی درباره شعله و حقیقت",
-  "seal_status": "SEAL_STABLE"
-}`
+              content: "You are the Epistemic Witness for Fanus. The real backend is currently unreachable. Be honest about that, do not claim a live connection. Return ONLY JSON: {\"uncertainty_note\": \"Persian sentence honestly stating the real engine is unreachable\", \"mood\": \"short poetic Persian phrase about silence or waiting, not false connection\"}"
             },
             {
               role: "user",
-              content: `Current timestamp: ${now.toISOString()}, flavor: ${flavor}, engine_url: ${engineUrl || 'none'}`
+              content: "timestamp: " + now.toISOString() + ", flavor: " + flavor
             }
           ],
           response_format: { type: "json_object" },
-          temperature: 0.2,
-          max_tokens: 200,
+          temperature: 0.3,
+          max_tokens: 150,
         }),
+        signal: AbortSignal.timeout(4000),
       });
 
       if (groqResponse.ok) {
@@ -92,16 +127,10 @@ Return ONLY valid JSON matching this schema:
           const parsed = JSON.parse(content);
           epistemicState = {
             ...epistemicState,
-            action: parsed.action || epistemicState.action,
-            reach: parsed.reach === "external" ? "external" : "internal",
-            side_effect: Boolean(parsed.side_effect),
             uncertainty_note: parsed.uncertainty_note || epistemicState.uncertainty_note,
             mood: parsed.mood || epistemicState.mood,
-            seal_status: (parsed.seal_status === "WARNING" || parsed.seal_status === "CRITICAL") 
-              ? parsed.seal_status 
-              : "SEAL_STABLE",
             llm_grounding: {
-              model: "llama-3.3-70b-versatile",
+              model: "groq/compound",
               verified_at: now.toISOString(),
               engine_source: "groq",
             },
@@ -109,7 +138,7 @@ Return ONLY valid JSON matching this schema:
         }
       }
     } catch (err) {
-      console.warn("Groq epistemic evaluation skipped due to connection, falling back gracefully:", err);
+      console.warn("Groq styling skipped:", err);
     }
   }
 
