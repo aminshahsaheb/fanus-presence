@@ -7,56 +7,52 @@ export async function POST(request: NextRequest) {
     const body = await request.json().catch(() => ({}));
     const signal = body.signal || "default_signal";
     const execution_id = `exec_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const engineUrl = process.env.NEXT_PUBLIC_ENGINE_URL;
     const groqApiKey = process.env.GROQ_API_KEY;
 
-    let evaluation = null;
-
-    if (groqApiKey && signal.trim().length > 0) {
+    // Primary source: the real Fanus engine's /verify endpoint (does a
+    // real epistemic evaluation, not a Groq guess).
+    if (engineUrl) {
       try {
-        const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        const res = await fetch(engineUrl + "/demo/verify", {
           method: "POST",
-          headers: {
-            "Authorization": `Bearer ${groqApiKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "llama-3.3-70b-versatile",
-            messages: [
-              {
-                role: "system",
-                content: "You are the Fanus Epistemic Signal Evaluator. Assess if the signal creates an external side effect or only an in-memory observation event. Output JSON: {\"confidence\": number (0-1), \"conflict\": number (0-1), \"seal_state\": \"stable\" | \"warning\" | \"critical\", \"epistemic_reach\": \"internal\" | \"external\", \"side_effect\": boolean, \"summary\": string}"
-              },
-              {
-                role: "user",
-                content: `Signal: ${signal}`
-              }
-            ],
-            response_format: { type: "json_object" },
-            temperature: 0.1,
-            max_tokens: 150,
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: "signal_check", response: signal, context: "" }),
+          signal: AbortSignal.timeout(6000),
         });
-
-        if (groqRes.ok) {
-          const groqData = await groqRes.json();
-          const raw = groqData.choices?.[0]?.message?.content;
-          if (raw) {
-            evaluation = JSON.parse(raw);
-          }
+        if (res.ok) {
+          const real = await res.json();
+          return NextResponse.json({
+            execution_id,
+            status: "evaluated",
+            signal_length: signal.length,
+            action: "FanusExecutionLayer.execute()",
+            reach: "external",
+            side_effect: false,
+            uncertainty_note:
+              `ارزیابی واقعی موتور: risk=${real.risk}, truth_score=${real.truth_score}.`,
+            truth_score: real.truth_score,
+            risk: real.risk,
+            timestamp: new Date().toISOString()
+          });
         }
       } catch (err) {
-        console.warn("Groq signal evaluation failed, falling back to local protocol:", err);
+        console.warn("Real engine unreachable for /execute, falling back:", err);
       }
     }
 
+    // Fallback: engine unreachable -- honest "not connected" state,
+    // NOT a Groq-fabricated guess (removed the old llama-3.3-70b-versatile
+    // call, which was both using a deprecated model AND guessing instead
+    // of reporting real state).
     return NextResponse.json({
       execution_id,
       status: "queued",
       signal_length: signal.length,
       action: "FanusExecutionLayer.execute()",
-      reach: evaluation?.epistemic_reach || "internal",
-      side_effect: Boolean(evaluation?.side_effect),
-      uncertainty_note: evaluation?.summary || "تنها در حافظه موقت رویداد ثبت شد؛ بدون اثر جانبی در جهان بیرونی.",
+      reach: "internal",
+      side_effect: false,
+      uncertainty_note: "موتور واقعی در دسترس نیست؛ تنها در حافظه موقت رویداد ثبت شد.",
       timestamp: new Date().toISOString()
     });
   } catch (error) {
