@@ -2,13 +2,21 @@ import "./globals.css"
 import Link from "next/link"
 
 export const metadata = {
-  title: "Fanus – Living Seal",
-  description: "Living Seal & Āyāneh Presence Dashboard for Fanus Protocol",
+  title: "Fānus — Living Seal",
+  description: "Fānus Presence — a live human–AI presence and verification interface.",
+  applicationName: "Fānus Presence",
+  keywords: ["Fānus", "Presence", "Living Seal", "Witness", "verification"],
+  metadataBase: new URL("https://fanus-presence.vercel.app"),
+  openGraph: {
+    title: "Fānus — Living Seal",
+    description: "A live human–AI presence and verification interface.",
+    type: "website",
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fa" dir="rtl">
       <body className="min-h-screen bg-[#030504] font-sans text-white">
         <header className="sticky top-0 z-50 border-b border-zinc-900/90 bg-[#030504]/88 px-5 py-3 backdrop-blur-xl sm:px-8">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-6">
