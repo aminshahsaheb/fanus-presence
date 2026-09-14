@@ -3,12 +3,13 @@
 import { motion } from "framer-motion"
 
 type Props = {
+  output?: string
   confidence: number
   conflict: number
   sealState: string
 }
 
-export default function SealPanel({ confidence, conflict, sealState }: Props) {
+export default function SealPanel({ output, confidence, conflict, sealState }: Props) {
   const normalizedState = sealState.toLowerCase()
   const isStable = normalizedState === "stable" || sealState === "SEAL_STABLE"
   const isCritical = normalizedState === "critical" || sealState === "SEAL_CRITICAL"
@@ -32,6 +33,13 @@ export default function SealPanel({ confidence, conflict, sealState }: Props) {
           </span>
         </div>
       </div>
+
+      {output && (
+        <div className="border-b border-zinc-800/80 px-5 py-5 sm:px-6">
+          <div className="mb-2 text-[9px] font-mono uppercase tracking-[0.22em] text-zinc-600">Witness output</div>
+          <p className="text-sm leading-7 text-zinc-300">{output}</p>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 divide-y divide-zinc-800/80 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
         <Metric label="Confidence" value={`${(confidence * 100).toFixed(1)}%`} ratio={confidence} color="#57d49a" />
