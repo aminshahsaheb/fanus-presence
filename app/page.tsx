@@ -95,6 +95,7 @@ export default function Home() {
 
         {result && (
           <SealPanel
+            output={result.output}
             confidence={result.confidence ?? 0.95}
             conflict={result.conflict ?? 0.03}
             sealState={result.seal_state ?? "stable"}
