@@ -49,7 +49,22 @@ It ensures that an AI, upon reading the Seal, does not just decode words but rel
 ---
 
 
-## 🏛️ Architecture (Cognitive Runtime – v7.0)
+## 🏛️ Architecture (Experience Layer)
+
+This repository is the human-facing experience layer around the canonical Fānus core. Runtime and verification surfaces may connect to the canonical engine over configured endpoints; this repository does not redefine the core protocol or cognitive architecture.
+
+For the canonical implementation, protocol, RFCs, cognitive runtime, memory system, adapters, and audit model, see Fanus-Living-Seal.
+
+### Experience surfaces
+
+| Surface | Role |
+|---------|------|
+| / | Runtime / verification entry experience |
+| /presence | Presence and live-state observation |
+| /blueprint | Engineering blueprint / observability surface |
+| /api/v1/* | Experience-layer runtime gateway |
+
+
 
 
 Fānus is now a fully executable cognitive engine:
