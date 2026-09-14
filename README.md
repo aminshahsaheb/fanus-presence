@@ -67,58 +67,21 @@ For the canonical implementation, protocol, RFCs, cognitive runtime, memory syst
 
 
 
-Fānus is now a fully executable cognitive engine:
+### Canonical Core Boundary
 
+The executable cognitive runtime, protocol implementation, research core, memory system, adapters, RFCs, and governance remain canonical in **Fanus-Living-Seal**. This repository should not duplicate or silently redefine those systems.
 
-| Layer | Purpose | Key Files |
-
-|-------|---------|------------|
-
-| Cognitive Core | Identity, Self-Model, Collapse Detection | fanus/cognitive/ |
-
-| Memory Pipeline | Evidence, Validation, Belief, Knowledge Graph | fanus/memory/ |
-
-| Knowledge Gateway | 6 live sources: ArXiv, Crossref, PubMed, Wikipedia, GitHub, HackerNews | fanus/adapters/ |
-
-| Cognitive Growth | Goals, Curiosity, Research Planning, Meta Learning | fanus/cognitive/ |
-
-| LLM Adapters | Groq (active), Claude, OpenAI, Perplexity | fanus/adapters/ |
-
-| Runtime | Evolution Engine, Stabilization, Observer | fanus/runtime/ |
-
-
-**Stats:** 73 Python files · 215 functions · 10 memory modules · 6 knowledge sources
-
-
-**Quick Start:**
-
-```bash
-
-git clone https://github.com/aminshahsaheb/Fanus-Living-Seal
-
-cd Fanus-Living-Seal
-
-pip install groq python-dotenv arxiv wikipedia-api feedparser
-
-echo "GROQ_API_KEY=your_key" > .env
-
-python3 -m fanus.main
-
-```
-
+Presence-specific runtime and verification code here should be treated as an experience-layer integration surface. Any unavailable, simulated, or demo behavior must remain explicitly distinguishable from canonical engine execution.
 
 Roadmap:
 
+· Phase 1 — Presence experience
 
-· Phase 1 — Cognitive Runtime
+· Phase 2 — Verification integration
 
-· Phase 2 — Knowledge Foundation
+· Phase 3 — Engineering Blueprint
 
-· Phase 3 — World Interface
-
-· Phase 4 — Cognitive Growth
-
-· Phase 5 — Fanus OS
+· Phase 4 — Cross-surface consistency
 
 
 ---
