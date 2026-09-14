@@ -8,10 +8,8 @@ export async function POST(request: NextRequest) {
     const signal = body.signal || "default_signal";
     const execution_id = `exec_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
     const engineUrl = process.env.NEXT_PUBLIC_ENGINE_URL;
-    const groqApiKey = process.env.GROQ_API_KEY;
 
-    // Primary source: the real Fanus engine's /verify endpoint (does a
-    // real epistemic evaluation, not a Groq guess).
+    // Primary source: the real Fanus engine's /verify endpoint.
     if (engineUrl) {
       try {
         const res = await fetch(engineUrl + "/demo/verify", {
@@ -31,8 +29,7 @@ export async function POST(request: NextRequest) {
             side_effect: false,
             uncertainty_note:
               `ارزیابی واقعی موتور: risk=${real.risk}, truth_score=${real.truth_score}.`,
-            truth_score: real.truth_score,
-            risk: real.risk,
+            verification: real,
             timestamp: new Date().toISOString()
           });
         }
@@ -41,10 +38,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Fallback: engine unreachable -- honest "not connected" state,
-    // NOT a Groq-fabricated guess (removed the old llama-3.3-70b-versatile
-    // call, which was both using a deprecated model AND guessing instead
-    // of reporting real state).
+    // Fallback: engine unreachable -- report that honestly, without fabricating a score.
     return NextResponse.json({
       execution_id,
       status: "queued",
