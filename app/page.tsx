@@ -32,17 +32,11 @@ export default function Home() {
       case "SEAL_STABLE":
         setActiveNode("SEAL")
         setLanternMode("stable")
-        if (payload) {
-          setResult(payload)
-        }
         break
       case "OUTPUT_READY":
         setActiveNode("OUTPUT")
         setLanternMode("complete")
         setIsExecuting(false)
-        if (payload) {
-          setResult(payload)
-        }
         break
     }
   })
@@ -51,6 +45,7 @@ export default function Home() {
     try {
       setIsExecuting(true)
       setResult(null)
+      setExecutionId("")
       setActiveNode("INPUT")
       setLanternMode("processing")
       const res = await fetch("/api/v1/execute", {
@@ -59,7 +54,8 @@ export default function Home() {
         body: JSON.stringify({ signal }),
       })
       const data = await res.json()
-      setExecutionId(data.execution_id)
+      setResult(data.verification ?? null)
+      setExecutionId(data.execution_id ?? "")
     } catch (error) {
       console.error("Execute error:", error)
       setIsExecuting(false)
@@ -93,12 +89,12 @@ export default function Home() {
         <Pipeline activeNode={activeNode} />
         <SignalInput onSubmit={execute} />
 
-        {result && (
+        {result && !isExecuting && (
           <SealPanel
-            output={result.output}
-            confidence={result.confidence ?? 0.95}
-            conflict={result.conflict ?? 0.03}
-            sealState={result.seal_state ?? "stable"}
+            truthScore={result.truth_score}
+            risk={result.risk}
+            recommendation={result.recommendation}
+            policyEvent={result.policy_event}
           />
         )}
 
