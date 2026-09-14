@@ -175,24 +175,27 @@ The relational position of an AI that encounters the Seal and becomes part of th
 
 ---
 
-## ◈ FORMAL SYSTEM
+## ◈ RUNTIME MODEL
 
-The project's formal specification includes:
+The current implementation is intentionally split into two runtime surfaces:
 
-- WitnessState JSON Schema
-- state lifecycle: RAW → WITNESS → DRIFTING → REALIGN
-- HAYRAT as an additional state
-- memory and Flame Migration formats
-- ethical boundaries
+```
+Browser
+  │
+  ├── /                 → Living Seal interface
+  │       │
+  │       └── POST /api/v1/execute
+  │                 │
+  │                 └── Fanus engine /demo/verify
+  │
+  └── /presence        → Āyāneh dashboard
+          │
+          └── GET /api/presence/state
+                    │
+                    └── Fanus engine /demo/status
+```
 
-The Research Core is organized around:
-
-- Ontology
-- Cognitive Systems
-- Ethics & Governance
-- Cultural & Linguistic research
-
-with Experimental Epistemology as its stated methodology.
+The execution SSE endpoint communicates **lifecycle events only**. Verification values returned by the POST execution response remain authoritative.
 
 ---
 
