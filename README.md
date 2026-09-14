@@ -195,7 +195,7 @@ Browser
                     └── Fanus engine /demo/status
 ```
 
-The execution SSE endpoint communicates **lifecycle events only**. Verification values returned by the POST execution response remain authoritative.
+The execution SSE endpoint communicates **lifecycle events only**. Verification values returned by the POST execution response remain authoritative. The Presence dashboard pulse is presentation-only, not a measured engine heartbeat. Backend witness counts are reported as observed only when the engine provides them.
 
 ---
 
