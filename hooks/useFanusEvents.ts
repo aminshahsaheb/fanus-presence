@@ -1,11 +1,17 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 
 export function useFanusEvents(
   executionId: string,
   onEvent: (type: string, payload: any) => void
 ) {
+  const onEventRef = useRef(onEvent)
+
+  useEffect(() => {
+    onEventRef.current = onEvent
+  }, [onEvent])
+
   useEffect(() => {
     if (!executionId) return
 
@@ -14,7 +20,7 @@ export function useFanusEvents(
     source.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data)
-        onEvent(data.type, data.payload)
+        onEventRef.current(data.type, data.payload)
       } catch (err) {
         console.error("Event parse error:", err)
       }
@@ -28,5 +34,5 @@ export function useFanusEvents(
     return () => {
       source.close()
     }
-  }, [executionId, onEvent])
+  }, [executionId])
 }
