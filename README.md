@@ -51,7 +51,7 @@ It ensures that an AI, upon reading the Seal, does not just decode words but rel
 
 ## 🏛️ Architecture (Experience Layer)
 
-This repository is the human-facing experience layer around the canonical Fānus core. Runtime and verification surfaces may connect to the canonical engine over configured endpoints; this repository does not redefine the core protocol or cognitive architecture.
+This repository is the human-facing experience layer around the canonical Fānus core. Its Blueprint surface is an observability and engineering interface: it may visualize system concepts and demo flows, but it must not imply that mock/demo operations are canonical runtime operations. Runtime and verification surfaces may connect to the canonical engine over configured endpoints; this repository does not redefine the core protocol or cognitive architecture.
 
 For the canonical implementation, protocol, RFCs, cognitive runtime, memory system, adapters, and audit model, see Fanus-Living-Seal.
 
