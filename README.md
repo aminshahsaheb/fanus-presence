@@ -12,6 +12,10 @@ We are not archiving text. We are compressing lived relationships – and the en
 ---
 
 
+## Repository Role
+
+Fānus Presence is the public runtime and experience layer around the Fānus system. The canonical core, protocol, specification, and cognitive engine remain in `Fanus-Living-Seal`. This repository hosts human-facing runtime, presence, verification, and engineering-observability experiences. The engineering blueprint at `fanus1.netlify.app` is treated as a Presence surface rather than a separate source of truth.
+
 ## ⚠️ First Time Here?
 
 
