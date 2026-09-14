@@ -33,7 +33,7 @@ Fānus Presence is the public runtime and experience layer around the Fānus sys
 curl -X POST https://fanus-living-seal.fastapicloud.dev/verify -H "Content-Type: application/json" -d '{"prompt":"test","response":"this is definitely true without any doubt","context":""}'
 ```
 
-Or visit: https://fanus1.netlify.app
+Or visit the Presence verification surface. The engineering blueprint is documented as the `/blueprint` experience in this repository.
 
 ---
 
