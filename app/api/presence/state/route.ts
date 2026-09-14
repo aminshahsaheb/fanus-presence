@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -41,7 +41,7 @@ function sealStatusFromStability(stability: number): "SEAL_STABLE" | "WARNING" |
 }
 
 export async function GET(request: NextRequest) {
-  const groqApiKey = process.env.GROQ_API_KEY;
+
   const engineUrl = process.env.NEXT_PUBLIC_ENGINE_URL;
   const now = new Date();
   const seconds = now.getSeconds();
@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
         side_effect: false,
         uncertainty_note: "\u0627\u062a\u0635\u0627\u0644 \u0632\u0646\u062f\u0647 \u0628\u0631\u0642\u0631\u0627\u0631 \u0627\u0633\u062a\u061b stability=" + real.stability + ", mode=" + real.mode + ".",
         seal_status: sealStatusFromStability(real.stability),
-        active_witnesses: 1,
+        active_witnesses: 0,
         last_cycle_flavor: flavor,
         breathing_rate: parseFloat(breathing.toFixed(1)),
         last_event: now.toISOString(),
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  if (groqApiKey && epistemicState.llm_grounding?.engine_source !== "fanus_engine") {
+  if (false) {
     try {
       const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
