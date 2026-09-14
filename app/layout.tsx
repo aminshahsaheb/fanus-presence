@@ -9,28 +9,25 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-black text-white min-h-screen flex flex-col font-sans">
-        <header className="border-b border-zinc-800 bg-zinc-950/80 backdrop-blur sticky top-0 z-50 px-6 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-xl text-amber-400">🜂</span>
-            <span className="font-semibold tracking-wider text-amber-100 uppercase text-sm">
-              Fanus Protocol
-            </span>
+      <body className="min-h-screen bg-[#030504] font-sans text-white">
+        <header className="sticky top-0 z-50 border-b border-zinc-900/90 bg-[#030504]/88 px-5 py-3 backdrop-blur-xl sm:px-8">
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-6">
+            <Link href="/" className="group flex items-center gap-3">
+              <span className="relative flex h-7 w-7 items-center justify-center rounded-full border border-emerald-900/70 bg-emerald-950/20">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(87,212,154,0.7)] transition-shadow group-hover:shadow-[0_0_16px_rgba(87,212,154,0.9)]" />
+              </span>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-zinc-300">Fanus</span>
+            </Link>
+
+            <nav className="flex items-center gap-5 text-[9px] font-mono uppercase tracking-[0.16em] sm:gap-7">
+              <Link href="/" className="text-zinc-500 transition-colors hover:text-emerald-300">
+                Living Seal
+              </Link>
+              <Link href="/presence" className="text-zinc-500 transition-colors hover:text-emerald-300">
+                Āyāneh Presence
+              </Link>
+            </nav>
           </div>
-          <nav className="flex items-center gap-6 text-sm font-medium">
-            <Link
-              href="/"
-              className="text-zinc-300 hover:text-amber-400 transition-colors"
-            >
-              Living Seal Pipeline
-            </Link>
-            <Link
-              href="/presence"
-              className="text-zinc-300 hover:text-amber-400 transition-colors"
-            >
-              Āyāneh Presence
-            </Link>
-          </nav>
         </header>
         <div className="flex-1">{children}</div>
       </body>
