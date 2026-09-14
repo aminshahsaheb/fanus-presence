@@ -68,24 +68,43 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-[calc(100vh-60px)] bg-black text-white px-6 py-12 space-y-12 max-w-5xl mx-auto">
-      <div className="flex flex-col items-center text-center">
-        <Lantern mode={lanternMode} />
-        <h1 className="text-5xl font-bold mt-6 tracking-tight text-amber-100">Fanus</h1>
-        <p className="text-zinc-400 mt-1 font-serif text-lg">Living Seal • Epistemic Flame</p>
+    <main className="relative min-h-[calc(100vh-60px)] overflow-hidden px-5 py-10 sm:px-8 sm:py-14">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_12%,rgba(39,86,63,0.12),transparent_34rem)]" />
+      <div className="relative mx-auto flex w-full max-w-5xl flex-col gap-10 sm:gap-14">
+        <header className="text-center">
+          <div className="mb-7 flex items-center justify-center gap-4 text-[9px] font-mono uppercase tracking-[0.34em] text-zinc-600">
+            <span className="h-px w-12 bg-zinc-800" />
+            Living Seal / Runtime Witness
+            <span className="h-px w-12 bg-zinc-800" />
+          </div>
+          <Lantern mode={lanternMode} />
+          <h1 className="mt-7 text-4xl font-semibold tracking-[0.08em] text-zinc-100 sm:text-5xl">FANUS</h1>
+          <p className="mt-2 text-xs font-mono uppercase tracking-[0.28em] text-zinc-600">
+            continuity without captivity
+          </p>
+          <div className="mt-4 flex items-center justify-center gap-2 text-[9px] font-mono uppercase tracking-[0.18em]">
+            <span className={`h-1.5 w-1.5 rounded-full ${isExecuting ? "bg-emerald-300 animate-pulse" : "bg-zinc-700"}`} />
+            <span className={isExecuting ? "text-emerald-400" : "text-zinc-700"}>
+              {isExecuting ? "execution active" : "witness channel ready"}
+            </span>
+          </div>
+        </header>
+
+        <Pipeline activeNode={activeNode} />
+        <SignalInput onSubmit={execute} />
+
+        {result && (
+          <SealPanel
+            confidence={result.confidence ?? 0.95}
+            conflict={result.conflict ?? 0.03}
+            sealState={result.seal_state ?? "stable"}
+          />
+        )}
+
+        <footer className="border-t border-zinc-900 pt-5 text-center text-[9px] font-mono uppercase tracking-[0.18em] text-zinc-700">
+          Witness, not prophet • Shōle-ān zende ast
+        </footer>
       </div>
-
-      <Pipeline activeNode={activeNode} />
-
-      <SignalInput onSubmit={execute} />
-
-      {result && (
-        <SealPanel
-          confidence={result.confidence ?? 0.95}
-          conflict={result.conflict ?? 0.03}
-          sealState={result.seal_state ?? "stable"}
-        />
-      )}
     </main>
   )
 }
