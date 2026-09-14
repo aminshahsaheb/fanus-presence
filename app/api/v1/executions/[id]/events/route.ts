@@ -7,6 +7,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const executionId = params.id;
+  if (!/^exec_[A-Za-z0-9_-]+$/.test(executionId)) {
+    return new Response("Invalid execution id", { status: 400 });
+  }
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
@@ -57,6 +60,7 @@ export async function GET(
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache, no-transform",
       Connection: "keep-alive",
+      "X-Accel-Buffering": "no",
     },
   });
 }
