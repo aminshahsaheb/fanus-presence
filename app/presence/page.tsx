@@ -103,7 +103,7 @@ export default function AyanehPresenceDashboard() {
           </div>
           <div className="flex items-center gap-2 text-[9px] font-mono uppercase tracking-[0.16em]" style={{ color: config.color }}>
             <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: config.color, boxShadow: `0 0 12px ${config.color}` }} />
-            Live state
+            {state.llm_grounding?.engine_source === "fanus_engine" ? "Live engine state" : "Witness state / engine unavailable"}
           </div>
         </header>
 
