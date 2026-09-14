@@ -5,7 +5,10 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({}));
-    const signal = body.signal || "default_signal";
+    const signal = typeof body.signal === "string" ? body.signal.trim() : "";
+    if (!signal) {
+      return NextResponse.json({ error: "Signal is required" }, { status: 400 });
+    }
     const execution_id = `exec_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
     const engineUrl = process.env.NEXT_PUBLIC_ENGINE_URL;
 
@@ -41,12 +44,12 @@ export async function POST(request: NextRequest) {
     // Fallback: engine unreachable -- report that honestly, without fabricating a score.
     return NextResponse.json({
       execution_id,
-      status: "queued",
+      status: "engine_unavailable",
       signal_length: signal.length,
       action: "FanusExecutionLayer.execute()",
       reach: "internal",
       side_effect: false,
-      uncertainty_note: "موتور واقعی در دسترس نیست؛ تنها در حافظه موقت رویداد ثبت شد.",
+      uncertainty_note: "موتور واقعی در دسترس نیست؛ هیچ verification score یا execution persistence ادعا نمی‌شود.",
       timestamp: new Date().toISOString()
     });
   } catch (error) {
