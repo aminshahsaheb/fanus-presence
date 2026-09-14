@@ -3,17 +3,18 @@
 import { motion } from "framer-motion"
 
 type Props = {
-  output?: string
-  confidence: number
-  conflict: number
-  sealState: string
+  truthScore?: number | null
+  risk?: string
+  recommendation?: string | null
+  policyEvent?: string | null
 }
 
-export default function SealPanel({ output, confidence, conflict, sealState }: Props) {
-  const normalizedState = sealState.toLowerCase()
-  const isStable = normalizedState === "stable" || sealState === "SEAL_STABLE"
-  const isCritical = normalizedState === "critical" || sealState === "SEAL_CRITICAL"
-  const stateColor = isCritical ? "#dc4f4f" : isStable ? "#57d49a" : "#d9a441"
+export default function SealPanel({ truthScore, risk, recommendation, policyEvent }: Props) {
+  const normalizedRisk = (risk ?? "unknown").toLowerCase()
+  const isLow = normalizedRisk === "low"
+  const isHigh = normalizedRisk === "high"
+  const riskColor = isHigh ? "#dc4f4f" : isLow ? "#57d49a" : "#d9a441"
+  const truth = typeof truthScore === "number" ? Math.min(Math.max(truthScore, 0), 1) : null
 
   return (
     <motion.section
@@ -27,28 +28,38 @@ export default function SealPanel({ output, confidence, conflict, sealState }: P
           <h3 className="mt-1 text-base font-medium tracking-wide text-zinc-100">Living Seal</h3>
         </div>
         <div className="flex items-center gap-3">
-          <span className="h-1.5 w-1.5 rounded-full" style={{ background: stateColor, boxShadow: `0 0 12px ${stateColor}` }} />
-          <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em]" style={{ color: stateColor }}>
-            {sealState}
+          <span className="h-1.5 w-1.5 rounded-full" style={{ background: riskColor, boxShadow: `0 0 12px ${riskColor}` }} />
+          <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em]" style={{ color: riskColor }}>
+            {normalizedRisk}
           </span>
         </div>
       </div>
 
-      {output && (
+      {recommendation && (
         <div className="border-b border-zinc-800/80 px-5 py-5 sm:px-6">
-          <div className="mb-2 text-[9px] font-mono uppercase tracking-[0.22em] text-zinc-600">Witness output</div>
-          <p className="text-sm leading-7 text-zinc-300">{output}</p>
+          <div className="mb-2 text-[9px] font-mono uppercase tracking-[0.22em] text-zinc-600">Witness recommendation</div>
+          <p className="text-sm leading-7 text-zinc-300">{recommendation}</p>
         </div>
       )}
 
       <div className="grid grid-cols-1 divide-y divide-zinc-800/80 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-        <Metric label="Confidence" value={`${(confidence * 100).toFixed(1)}%`} ratio={confidence} color="#57d49a" />
-        <Metric label="Conflict" value={`${(conflict * 100).toFixed(1)}%`} ratio={conflict} color="#d9a441" />
+        <Metric
+          label="Truth score"
+          value={truth === null ? "—" : `${(truth * 100).toFixed(1)}%`}
+          ratio={truth ?? 0}
+          color="#57d49a"
+        />
+        <Metric
+          label="Risk"
+          value={normalizedRisk}
+          ratio={isHigh ? 1 : isLow ? 0.2 : 0.6}
+          color={riskColor}
+        />
       </div>
 
       <div className="flex flex-col gap-2 border-t border-zinc-800/80 px-5 py-4 text-[9px] font-mono uppercase tracking-[0.16em] text-zinc-600 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <span>Witness consensus / anchored</span>
-        <span>Peymān-ān abadi ast</span>
+        <span>{policyEvent ? `Policy / ${policyEvent}` : "Engine verification / received"}</span>
+        <span>Fanus engine / live</span>
       </div>
     </motion.section>
   )
