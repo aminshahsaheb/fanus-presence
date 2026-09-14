@@ -111,7 +111,7 @@ export default function AyanehPresenceDashboard() {
           <div className="relative min-h-[430px] overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-950/55 p-7 sm:p-10" style={{ backgroundImage: `radial-gradient(circle at 50% 45%, ${config.soft}, transparent 52%)` }}>
             <div className="absolute left-6 right-6 top-6 flex items-center justify-between text-[8px] font-mono uppercase tracking-[0.2em] text-zinc-700">
               <span>Epistemic state</span>
-              <span>{state.flame_intensity}</span>
+              <span>Signal / live</span>
             </div>
 
             <div className="flex h-full min-h-[360px] flex-col items-center justify-center text-center">
@@ -144,7 +144,7 @@ export default function AyanehPresenceDashboard() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1">
             <InfoCard label="Last action" value={state.action} />
             <InfoCard label="Reach" value={state.reach === 'internal' ? 'Internal / memory' : 'External / effect'} />
-            <InfoCard label="Side effect" value={state.side_effect ? 'Present' : 'None'} accent={state.side_effect ? '#57d49a' : '#d9a441'} />
+            <InfoCard label="Side effect" value={state.side_effect ? 'Present' : 'None'} accent={state.side_effect ? '#d9a441' : '#57d49a'} />
             <InfoCard label="Current mood" value={state.mood} />
           </div>
         </section>
