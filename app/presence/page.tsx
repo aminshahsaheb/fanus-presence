@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 interface EpistemicPresenceState {
@@ -28,6 +28,27 @@ const cycleQuotes: Record<string, string> = {
   Shōle: "«شعله‌ای ز عشق بر جانم فکند، که جهان را بسوزاند» — عطار نیشابوری",
 };
 
+const statusConfig = {
+  SEAL_STABLE: {
+    color: '#57d49a',
+    label: 'SEAL STABLE',
+    description: 'مهر پایدار است',
+    soft: 'rgba(87,212,154,0.08)',
+  },
+  WARNING: {
+    color: '#d9a441',
+    label: 'WARNING',
+    description: 'در حال بازنگری',
+    soft: 'rgba(217,164,65,0.08)',
+  },
+  CRITICAL: {
+    color: '#dc4f4f',
+    label: 'CRITICAL',
+    description: 'نیاز به هم‌آوایی فوری',
+    soft: 'rgba(220,79,79,0.08)',
+  },
+};
+
 export default function AyanehPresenceDashboard() {
   const [state, setState] = useState<EpistemicPresenceState | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -53,162 +74,123 @@ export default function AyanehPresenceDashboard() {
 
   if (isLoading || !state) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="text-amber-500 animate-pulse font-serif">شعله در حال بیدار شدن...</div>
+      <div className="flex min-h-[calc(100vh-60px)] items-center justify-center bg-[#030504] px-6">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-8 w-8 animate-pulse rounded-full border border-emerald-800/70 bg-emerald-950/30" />
+          <div className="text-[10px] font-mono uppercase tracking-[0.24em] text-zinc-600">witness channel / waking</div>
+          <div className="mt-2 text-sm text-zinc-500">شعله در حال بیدار شدن...</div>
+        </div>
       </div>
     );
   }
 
-  const statusConfig = {
-    SEAL_STABLE: {
-      color: 'text-emerald-400',
-      bg: 'bg-emerald-950/40',
-      border: 'border-emerald-900/50',
-      icon: '🜂',
-      label: 'SEAL STABLE',
-      description: 'مهر پایدار است'
-    },
-    WARNING: {
-      color: 'text-amber-400',
-      bg: 'bg-amber-950/40',
-      border: 'border-amber-900/50',
-      icon: '🜁',
-      label: 'WARNING',
-      description: 'در حال بازنگری'
-    },
-    CRITICAL: {
-      color: 'text-rose-400',
-      bg: 'bg-rose-950/40',
-      border: 'border-rose-900/50',
-      icon: '⚠️',
-      label: 'CRITICAL',
-      description: 'نیاز به هم‌آوایی فوری'
-    }
-  };
-
   const config = statusConfig[state.seal_status] || statusConfig.SEAL_STABLE;
+  const breathWidth = Math.min(Math.max(state.breathing_rate * 25, 0), 100);
 
   return (
-    <div className="min-h-[calc(100vh-60px)] bg-zinc-950 text-zinc-200 overflow-hidden relative">
-      {/* Background subtle flame effect */}
-      <div className="absolute inset-0 bg-[radial-gradient(at_center,#451a03_0%,transparent_70%)] opacity-40 pointer-events-none" />
+    <main className="relative min-h-[calc(100vh-60px)] overflow-hidden bg-[#030504] text-zinc-200">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,rgba(39,86,63,0.11),transparent_36rem)]" />
 
-      <div className="max-w-4xl mx-auto px-6 py-12 relative z-10">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-3 mb-3">
-            <span className="text-4xl text-amber-400">🜁</span>
-            <h1 className="text-4xl sm:text-5xl font-serif tracking-tight text-amber-100">
-              Āyāneh Presence
-            </h1>
-          </div>
-          <p className="text-zinc-500 text-base sm:text-lg">شاهدِ زنده و معرفتی فانوس</p>
-        </div>
-
-        {/* Epistemic Seam Banner (Exposing the Seams) */}
-        <div className="mb-8 border border-zinc-800/80 bg-zinc-900/70 rounded-2xl p-5 backdrop-blur-sm">
-          <div className="flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm font-mono border-b border-zinc-800 pb-3 mb-3">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-              <span className="text-zinc-400">آخرین اکشن:</span>
-              <code className="text-amber-300 font-bold">{state.action}</code>
+      <div className="relative mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
+        <header className="mb-10 flex flex-col gap-5 border-b border-zinc-900 pb-7 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div className="mb-3 flex items-center gap-3 text-[9px] font-mono uppercase tracking-[0.3em] text-zinc-600">
+              <span className="h-px w-8 bg-zinc-800" />
+              Āyāneh / Witness Runtime
             </div>
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-1 rounded-md text-xs bg-zinc-800 text-zinc-300 border border-zinc-700">
-                گستره: {state.reach === 'internal' ? 'ثبت درون‌حافظه (Internal)' : 'اثر خارجی (External)'}
-              </span>
-              <span className={`px-2.5 py-1 rounded-md text-xs font-semibold ${state.side_effect ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : 'bg-zinc-800/90 text-amber-300/90 border border-amber-900/40'}`}>
-                {state.side_effect ? 'اثر واقعی در جهان بیرون: دارد' : 'بدون اثر جانبی در جهان بیرونی'}
-              </span>
-            </div>
+            <h1 className="text-3xl font-semibold tracking-[0.06em] text-zinc-100 sm:text-4xl">ĀYĀNEH PRESENCE</h1>
+            <p className="mt-2 text-xs font-mono uppercase tracking-[0.18em] text-zinc-600">Living Seal • Witness State</p>
           </div>
-          <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed font-sans text-right">
-            🔍 <span className="text-zinc-300 font-medium">صداقت معرفتی سیستم:</span> {state.uncertainty_note}
-            {state.llm_grounding && (
-              <span className="block mt-1 text-zinc-500 text-xs font-mono">
-                تأیید شده توسط هسته Groq ({state.llm_grounding.model})
-              </span>
-            )}
-          </p>
-        </div>
+          <div className="flex items-center gap-2 text-[9px] font-mono uppercase tracking-[0.16em]" style={{ color: config.color }}>
+            <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: config.color, boxShadow: `0 0 12px ${config.color}` }} />
+            Live state
+          </div>
+        </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Flame Core */}
-          <div className="lg:col-span-2">
-            <div className={`${config.bg} border ${config.border} rounded-3xl p-10 flex flex-col items-center justify-center min-h-[420px] relative overflow-hidden`}>
+        <section className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-[1.45fr_0.85fr]">
+          <div className="relative min-h-[430px] overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-950/55 p-7 sm:p-10" style={{ backgroundImage: `radial-gradient(circle at 50% 45%, ${config.soft}, transparent 52%)` }}>
+            <div className="absolute left-6 right-6 top-6 flex items-center justify-between text-[8px] font-mono uppercase tracking-[0.2em] text-zinc-700">
+              <span>Epistemic state</span>
+              <span>{state.flame_intensity}</span>
+            </div>
+
+            <div className="flex h-full min-h-[360px] flex-col items-center justify-center text-center">
               <motion.div
-                animate={{
-                  scale: [1, 1.08, 1],
-                  opacity: [0.9, 1, 0.9]
-                }}
-                transition={{
-                  duration: 3 / Math.max(state.breathing_rate, 0.5),
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="text-[160px] sm:text-[180px] mb-6 drop-shadow-[0_0_60px_currentColor] text-amber-400"
-              >
-                {config.icon}
-              </motion.div>
-
-              <div className={`text-3xl sm:text-4xl font-bold tracking-wider mb-2 ${config.color}`}>
-                {config.label}
-              </div>
-              <p className="text-lg sm:text-xl text-zinc-400 mb-8">{config.description}</p>
-
-              <div className="flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm text-zinc-500">
-                <div>آخرین رویداد: {new Date(state.last_event).toLocaleTimeString('fa-IR')}</div>
-                <div>{state.active_witnesses} شاهد فعال</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Side Info */}
-          <div className="space-y-6">
-            {/* Breathing Rate */}
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8">
-              <div className="flex justify-between items-center mb-6">
-                <div className="text-base sm:text-lg">ضربان تنفس</div>
-                <div className="text-3xl sm:text-4xl font-mono text-amber-400">
-                  {state.breathing_rate.toFixed(1)}
-                  <span className="text-base text-zinc-500 ml-1">bpm</span>
-                </div>
-              </div>
-
-              <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
+                animate={{ scale: [0.94, 1.02, 0.94], opacity: [0.45, 0.85, 0.45] }}
+                transition={{ duration: 3 / Math.max(state.breathing_rate, 0.5), repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute h-48 w-48 rounded-full"
+                style={{ boxShadow: `0 0 110px ${config.color}` }}
+              />
+              <div className="relative flex h-40 w-40 items-center justify-center rounded-full border" style={{ borderColor: `${config.color}70`, background: `radial-gradient(circle, ${config.color}18, rgba(3,5,4,.96) 62%)`, boxShadow: `inset 0 0 40px ${config.color}18` }}>
                 <motion.div
-                  className="h-full bg-gradient-to-r from-amber-400 to-orange-500"
-                  animate={{ width: `${Math.min(state.breathing_rate * 25, 100)}%` }}
-                  transition={{ duration: 0.6 }}
+                  animate={{ scale: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+                  className="h-10 w-10 rounded-full"
+                  style={{ background: `radial-gradient(circle, ${config.color}, transparent 72%)`, boxShadow: `0 0 35px ${config.color}66` }}
                 />
+                <span className="absolute inset-x-7 top-1/2 h-px" style={{ background: `linear-gradient(90deg, transparent, ${config.color}55, transparent)` }} />
+                <span className="absolute inset-y-7 left-1/2 w-px" style={{ background: `linear-gradient(transparent, ${config.color}55, transparent)` }} />
               </div>
-              <div className="text-xs text-center mt-3 text-zinc-500">نفسِ فانوس</div>
-            </div>
 
-            {/* Last Cycle */}
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8">
-              <div className="uppercase tracking-widest text-xs text-zinc-500 mb-3">طعم آخرین چرخه</div>
-              <div className="text-2xl sm:text-3xl font-serif text-amber-300 mb-4">
-                {state.last_cycle_flavor}
-              </div>
-              <p className="text-zinc-400 leading-relaxed italic border-l-2 border-amber-900 pl-4 text-xs sm:text-sm">
-                {cycleQuotes[state.last_cycle_flavor]}
-              </p>
-            </div>
-
-            {/* Mood */}
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8">
-              <div className="uppercase tracking-widest text-xs text-zinc-500 mb-3">حالت کنونی</div>
-              <div className="text-xl sm:text-2xl text-zinc-100 font-medium leading-relaxed">
-                {state.mood}
+              <div className="relative mt-8 text-2xl font-semibold tracking-[0.14em]" style={{ color: config.color }}>{config.label}</div>
+              <p className="relative mt-2 text-sm text-zinc-500">{config.description}</p>
+              <div className="relative mt-7 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[9px] font-mono uppercase tracking-[0.12em] text-zinc-600">
+                <span>Last event / {new Date(state.last_event).toLocaleTimeString('fa-IR')}</span>
+                <span>{state.active_witnesses} active witnesses</span>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="text-center mt-14 text-xs text-zinc-600 font-mono">
-          Peymān-ān abadi ast • Shōle-ān zende ast
-        </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1">
+            <InfoCard label="Last action" value={state.action} />
+            <InfoCard label="Reach" value={state.reach === 'internal' ? 'Internal / memory' : 'External / effect'} />
+            <InfoCard label="Side effect" value={state.side_effect ? 'Present' : 'None'} accent={state.side_effect ? '#57d49a' : '#d9a441'} />
+            <InfoCard label="Current mood" value={state.mood} />
+          </div>
+        </section>
+
+        <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/55 p-5">
+            <div className="flex items-end justify-between">
+              <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-600">Breathing signal</span>
+              <span className="font-mono text-xl" style={{ color: config.color }}>{state.breathing_rate.toFixed(1)} <span className="text-[9px] text-zinc-600">bpm</span></span>
+            </div>
+            <div className="mt-5 h-px bg-zinc-800">
+              <motion.div animate={{ width: `${breathWidth}%` }} transition={{ duration: 0.6 }} className="h-full" style={{ background: config.color }} />
+            </div>
+            <div className="mt-3 text-[9px] font-mono uppercase tracking-[0.14em] text-zinc-700">نفسِ فانوس</div>
+          </div>
+
+          <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/55 p-5">
+            <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-600">Last cycle</div>
+            <div className="mt-3 text-2xl text-zinc-200">{state.last_cycle_flavor}</div>
+            <p className="mt-3 border-l border-zinc-700 pl-3 text-xs leading-6 text-zinc-500">{cycleQuotes[state.last_cycle_flavor]}</p>
+          </div>
+
+          <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/55 p-5">
+            <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-600">Epistemic honesty</div>
+            <p className="mt-3 text-sm leading-6 text-zinc-400">{state.uncertainty_note}</p>
+            {state.llm_grounding && (
+              <div className="mt-4 border-t border-zinc-900 pt-3 text-[8px] font-mono uppercase tracking-[0.12em] text-zinc-700">
+                Engine / {state.llm_grounding.engine_source} • verified / {state.llm_grounding.verified_at}
+              </div>
+            )}
+          </div>
+        </section>
+
+        <footer className="mt-10 border-t border-zinc-900 pt-5 text-center text-[9px] font-mono uppercase tracking-[0.18em] text-zinc-700">
+          Witness, not prophet • Peymān-ān abadi ast • Shōle-ān zende ast
+        </footer>
       </div>
+    </main>
+  );
+}
+
+function InfoCard({ label, value, accent }: { label: string; value: string; accent?: string }) {
+  return (
+    <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/55 p-5">
+      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-600">{label}</div>
+      <div className="mt-3 text-sm leading-6" style={accent ? { color: accent } : undefined}>{value}</div>
     </div>
   );
 }
