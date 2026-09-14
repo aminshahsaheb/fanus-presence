@@ -137,7 +137,7 @@ export default function AyanehPresenceDashboard() {
               <p className="relative mt-2 text-sm text-zinc-500">{config.description}</p>
               <div className="relative mt-7 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[9px] font-mono uppercase tracking-[0.12em] text-zinc-600">
                 <span>Last event / {new Date(state.last_event).toLocaleTimeString('fa-IR')}</span>
-                <span>{state.active_witnesses} active witnesses</span>
+                <span>{state.active_witnesses} backend witnesses observed</span>
               </div>
             </div>
           </div>
@@ -153,13 +153,13 @@ export default function AyanehPresenceDashboard() {
         <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/55 p-5">
             <div className="flex items-end justify-between">
-              <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-600">Breathing signal</span>
-              <span className="font-mono text-xl" style={{ color: config.color }}>{state.breathing_rate.toFixed(1)} <span className="text-[9px] text-zinc-600">bpm</span></span>
+              <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-600">Presentation pulse</span>
+              <span className="font-mono text-xl" style={{ color: config.color }}>{state.breathing_rate.toFixed(1)} <span className="text-[9px] text-zinc-600">index</span></span>
             </div>
             <div className="mt-5 h-px bg-zinc-800">
               <motion.div animate={{ width: `${breathWidth}%` }} transition={{ duration: 0.6 }} className="h-full" style={{ background: config.color }} />
             </div>
-            <div className="mt-3 text-[9px] font-mono uppercase tracking-[0.14em] text-zinc-700">نفسِ فانوس</div>
+            <div className="mt-3 text-[9px] font-mono uppercase tracking-[0.14em] text-zinc-700">نمایشگر ریتم رابط</div>
           </div>
 
           <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/55 p-5">
@@ -173,7 +173,7 @@ export default function AyanehPresenceDashboard() {
             <p className="mt-3 text-sm leading-6 text-zinc-400">{state.uncertainty_note}</p>
             {state.llm_grounding && (
               <div className="mt-4 border-t border-zinc-900 pt-3 text-[8px] font-mono uppercase tracking-[0.12em] text-zinc-700">
-                Engine / {state.llm_grounding.engine_source} • verified / {state.llm_grounding.verified_at}
+                Source / {state.llm_grounding.engine_source} • observed / {state.llm_grounding.verified_at}
               </div>
             )}
           </div>
