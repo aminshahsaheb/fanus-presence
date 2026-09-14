@@ -15,6 +15,7 @@ interface EpistemicExecutionState {
   last_event: string;
   mood: string;
   flame_intensity: string;
+  state_source: "real_engine" | "fallback";
   llm_grounding?: {
     model: string;
     verified_at: string;
