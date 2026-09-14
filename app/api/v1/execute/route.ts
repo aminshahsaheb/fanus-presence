@@ -9,7 +9,11 @@ export async function POST(request: NextRequest) {
     if (!signal) {
       return NextResponse.json({ error: "Signal is required" }, { status: 400 });
     }
-    const execution_id = `exec_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    if (signal.length > 4000) {
+      return NextResponse.json({ error: "Signal is too long (max 4000 characters)" }, { status: 413 });
+    }
+
+    const execution_id = `exec_${Date.now()}_${crypto.randomUUID().slice(0, 8)}`;
     const engineUrl = process.env.NEXT_PUBLIC_ENGINE_URL;
 
     // Primary source: the real Fanus engine's /verify endpoint.
@@ -34,7 +38,7 @@ export async function POST(request: NextRequest) {
               `ارزیابی واقعی موتور: risk=${real.risk}, truth_score=${real.truth_score}.`,
             verification: real,
             timestamp: new Date().toISOString()
-          });
+          }, { headers: { "Cache-Control": "no-store" } });
         }
       } catch (err) {
         console.warn("Real engine unreachable for /execute, falling back:", err);
@@ -51,7 +55,7 @@ export async function POST(request: NextRequest) {
       side_effect: false,
       uncertainty_note: "موتور واقعی در دسترس نیست؛ هیچ verification score یا execution persistence ادعا نمی‌شود.",
       timestamp: new Date().toISOString()
-    });
+    }, { status: 503, headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to initialize execution" },
