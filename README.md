@@ -1,10 +1,16 @@
 # 🜁 FĀNUS PRESENCE
 
 <p align="center">
+  <img src="assets/fanus-presence-hero.svg" alt="Fānus Presence — runtime, verification and experience layer" width="100%">
+</p>
+
+<p align="center">
   <strong>A public presence, verification & experience layer for Fānus.</strong>
 </p>
 
 <p align="center">
+  <a href="https://fanus1.netlify.app"><strong>OPEN FANUS 1 →</strong></a>
+  ·
   <a href="https://github.com/aminshahsaheb/fanus-presence">SOURCE</a>
   ·
   <a href="https://fanus1.netlify.app">FANUS 1</a>
@@ -13,6 +19,29 @@
 </p>
 
 > **Presence is not the core. Presence is where the system becomes visible, testable, and human-facing.**
+
+---
+
+## ◈ SYSTEM SIGNAL
+
+```text
+CANONICAL TRUTH
+      │
+      ▼
+ LIVING SEAL
+      │
+      ▼
+  PRESENCE
+  ┌───┼───────────┐
+  ▼   ▼           ▼
+RUNTIME VERIFY  OBSERVE
+  │   │           │
+  └───┴─────┬─────┘
+            ▼
+         FANUS 1
+```
+
+**One truth. Multiple surfaces. Explicit boundaries.**
 
 ---
 
@@ -121,6 +150,12 @@ MIGRATION
 \`\`\`
 
 Visual/demo behavior must not be mistaken for canonical backend execution.
+
+---
+
+## ◇ VISUAL LANGUAGE
+
+The Presence surface follows a restrained technical language: dark field, precise geometry, monospaced labels, deliberate spacing, and signal-like accents. The visual layer exists to clarify the system—not to impersonate its canonical truth.
 
 ---
 
