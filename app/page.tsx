@@ -14,7 +14,7 @@ export default function Home() {
   const [result, setResult] = useState<any>(null)
   const [isExecuting, setIsExecuting] = useState(false)
 
-  useFanusEvents(executionId, (type, payload) => {
+  useFanusEvents(executionId, (type) => {
     switch (type) {
       case "RFC_START":
         setActiveNode("RFC")
@@ -29,10 +29,12 @@ export default function Home() {
       case "SEAL_CRITICAL":
         setLanternMode("critical")
         break
-      case "SEAL_STABLE":
+      case "SEAL_STABLE": {
         setActiveNode("SEAL")
-        setLanternMode("stable")
+        const risk = result?.risk?.toLowerCase()
+        setLanternMode(risk === "high" ? "critical" : risk === "medium" ? "warning" : "stable")
         break
+      }
       case "OUTPUT_READY":
         setActiveNode("OUTPUT")
         setLanternMode("complete")
