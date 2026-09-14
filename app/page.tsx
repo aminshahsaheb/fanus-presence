@@ -29,15 +29,27 @@ export default function Home() {
       case "SEAL_CRITICAL":
         setLanternMode("critical")
         break
-      case "SEAL_STABLE": {
+      case "SEAL_EVALUATED": {
         setActiveNode("SEAL")
         const risk = result?.risk?.toLowerCase()
-        setLanternMode(risk === "high" ? "critical" : risk === "medium" ? "warning" : "stable")
+        setLanternMode(
+          !result ? "warning" : risk === "high" ? "critical" : risk === "medium" ? "warning" : "stable"
+        )
+        break
+      }
+      case "SEAL_STABLE": {
+        // Backward compatibility with older SSE streams. The stream must not
+        // provide verification values; the POST response remains authoritative.
+        setActiveNode("SEAL")
+        const risk = result?.risk?.toLowerCase()
+        setLanternMode(
+          !result ? "warning" : risk === "high" ? "critical" : risk === "medium" ? "warning" : "stable"
+        )
         break
       }
       case "OUTPUT_READY":
         setActiveNode("OUTPUT")
-        setLanternMode("complete")
+        setLanternMode(result ? "complete" : "warning")
         setIsExecuting(false)
         break
     }
@@ -50,14 +62,20 @@ export default function Home() {
       setExecutionId("")
       setActiveNode("INPUT")
       setLanternMode("processing")
+
       const res = await fetch("/api/v1/execute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ signal }),
       })
+
       const data = await res.json()
+      if (!res.ok || !data.execution_id) {
+        throw new Error(data.error || "Execution could not be initialized")
+      }
+
       setResult(data.verification ?? null)
-      setExecutionId(data.execution_id ?? "")
+      setExecutionId(data.execution_id)
     } catch (error) {
       console.error("Execute error:", error)
       setIsExecuting(false)
