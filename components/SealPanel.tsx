@@ -59,7 +59,7 @@ export default function SealPanel({ truthScore, risk, recommendation, policyEven
 
       <div className="flex flex-col gap-2 border-t border-zinc-800/80 px-5 py-4 text-[9px] font-mono uppercase tracking-[0.16em] text-zinc-600 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <span>{policyEvent ? `Policy / ${policyEvent}` : "Engine verification / received"}</span>
-        <span>Fanus engine / live</span>
+        <span>{policyEvent ? "Fanus engine / verified response" : "Execution gateway / response received"}</span>
       </div>
     </motion.section>
   )
