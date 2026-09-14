@@ -62,6 +62,7 @@ export async function GET(request: NextRequest) {
     last_event: now.toISOString(),
     mood: "\u062f\u0631 \u0627\u0646\u062a\u0638\u0627\u0631 \u0627\u062a\u0635\u0627\u0644",
     flame_intensity: "\ud83d\udf01",
+    state_source: "fallback",
   };
 
   if (engineUrl) {
@@ -81,6 +82,7 @@ export async function GET(request: NextRequest) {
           ? "\u0622\u0631\u0627\u0645 \u0648 \u0645\u062a\u0645\u0631\u06a9\u0632 \u2014 \u0634\u0639\u0644\u0647 \u0632\u0646\u062f\u0647 \u0648 \u0645\u062a\u0635\u0644 \u0627\u0633\u062a"
           : "\u062f\u0631 \u062d\u0627\u0644\u062a " + real.mode,
         flame_intensity: "\ud83d\udf02",
+        state_source: "real_engine",
         llm_grounding: {
           model: "fanus-engine-live",
           verified_at: now.toISOString(),
