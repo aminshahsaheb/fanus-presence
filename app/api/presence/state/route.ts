@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
           messages: [
             {
               role: "system",
-              content: "You are the Epistemic Witness for Fanus. The real backend is currently unreachable. Be honest about that, do not claim a live connection. Return ONLY JSON: {"uncertainty_note": "Persian sentence honestly stating the real engine is unreachable", "mood": "short poetic Persian phrase about silence or waiting, not false connection"}"
+              content: 'You are the Epistemic Witness for Fanus. The real backend is currently unreachable. Be honest about that, do not claim a live connection. Return ONLY JSON: {"uncertainty_note": "Persian sentence honestly stating the real engine is unreachable", "mood": "short poetic Persian phrase about silence or waiting, not false connection"}'
             },
             {
               role: "user",
