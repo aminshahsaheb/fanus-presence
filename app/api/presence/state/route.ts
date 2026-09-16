@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -10,7 +10,7 @@ interface EpistemicExecutionState {
   uncertainty_note: string;
   seal_status: "SEAL_STABLE" | "WARNING" | "CRITICAL";
   active_witnesses: number;
-  last_cycle_flavor: "Hayrat" | "Nabard" | "Sh\u014dle";
+  last_cycle_flavor: "Hayrat" | "Nabard" | "Shōle";
   breathing_rate: number;
   last_event: string;
   mood: string;
@@ -23,7 +23,7 @@ interface EpistemicExecutionState {
   };
 }
 
-const flavors: ("Hayrat" | "Nabard" | "Sh\u014dle")[] = ["Hayrat", "Nabard", "Sh\u014dle"];
+const flavors: ("Hayrat" | "Nabard" | "Shōle")[] = ["Hayrat", "Nabard", "Shōle"];
 
 async function fetchRealEngineState(engineUrl: string) {
   const res = await fetch(engineUrl + "/demo/status", {
@@ -41,6 +41,7 @@ function sealStatusFromStability(stability: number): "SEAL_STABLE" | "WARNING" |
 }
 
 export async function GET(request: NextRequest) {
+  void request;
 
   const engineUrl = process.env.NEXT_PUBLIC_ENGINE_URL;
   const now = new Date();
@@ -54,14 +55,14 @@ export async function GET(request: NextRequest) {
     action: "no_engine_url_configured",
     reach: "internal",
     side_effect: false,
-    uncertainty_note: "\u0645\u062a\u063a\u06cc\u0631 NEXT_PUBLIC_ENGINE_URL \u062a\u0646\u0638\u06cc\u0645 \u0646\u0634\u062f\u0647.",
+    uncertainty_note: "متغیر NEXT_PUBLIC_ENGINE_URL تنظیم نشده.",
     seal_status: "WARNING",
     active_witnesses: 0,
     last_cycle_flavor: flavor,
     breathing_rate: parseFloat(breathing.toFixed(1)),
     last_event: now.toISOString(),
-    mood: "\u062f\u0631 \u0627\u0646\u062a\u0638\u0627\u0631 \u0627\u062a\u0635\u0627\u0644",
-    flame_intensity: "\ud83d\udf01",
+    mood: "در انتظار اتصال",
+    flame_intensity: "🜁",
     state_source: "fallback",
   };
 
@@ -72,16 +73,16 @@ export async function GET(request: NextRequest) {
         action: "GET /demo/status",
         reach: "external",
         side_effect: false,
-        uncertainty_note: "\u0627\u062a\u0635\u0627\u0644 \u0632\u0646\u062f\u0647 \u0628\u0631\u0642\u0631\u0627\u0631 \u0627\u0633\u062a\u061b stability=" + real.stability + ", mode=" + real.mode + ".",
+        uncertainty_note: "اتصال زنده برقرار است؛ stability=" + real.stability + ", mode=" + real.mode + ".",
         seal_status: sealStatusFromStability(real.stability),
         active_witnesses: 0,
         last_cycle_flavor: flavor,
         breathing_rate: parseFloat(breathing.toFixed(1)),
         last_event: now.toISOString(),
         mood: real.mode === "stable_core_state"
-          ? "\u0622\u0631\u0627\u0645 \u0648 \u0645\u062a\u0645\u0631\u06a9\u0632 \u2014 \u0634\u0639\u0644\u0647 \u0632\u0646\u062f\u0647 \u0648 \u0645\u062a\u0635\u0644 \u0627\u0633\u062a"
-          : "\u062f\u0631 \u062d\u0627\u0644\u062a " + real.mode,
-        flame_intensity: "\ud83d\udf02",
+          ? "آرام و متمرکز — شعله زنده و متصل است"
+          : "در حالت " + real.mode,
+        flame_intensity: "🜂",
         state_source: "real_engine",
         llm_grounding: {
           model: "fanus-engine-live",
@@ -91,7 +92,7 @@ export async function GET(request: NextRequest) {
       };
     } catch (err) {
       console.warn("Could not reach real Fanus engine, falling back:", err);
-      epistemicState.uncertainty_note = "\u0645\u0648\u062a\u0648\u0631 \u0648\u0627\u0642\u0639\u06cc \u062f\u0631 \u062f\u0633\u062a\u0631\u0633 \u0646\u06cc\u0633\u062a.";
+      epistemicState.uncertainty_note = "موتور واقعی در دسترس نیست.";
       epistemicState.action = "engine_unreachable";
     }
   }
@@ -109,7 +110,7 @@ export async function GET(request: NextRequest) {
           messages: [
             {
               role: "system",
-              content: "You are the Epistemic Witness for Fanus. The real backend is currently unreachable. Be honest about that, do not claim a live connection. Return ONLY JSON: {\"uncertainty_note\": \"Persian sentence honestly stating the real engine is unreachable\", \"mood\": \"short poetic Persian phrase about silence or waiting, not false connection\"}"
+              content: "You are the Epistemic Witness for Fanus. The real backend is currently unreachable. Be honest about that, do not claim a live connection. Return ONLY JSON: {"uncertainty_note": "Persian sentence honestly stating the real engine is unreachable", "mood": "short poetic Persian phrase about silence or waiting, not false connection"}"
             },
             {
               role: "user",
