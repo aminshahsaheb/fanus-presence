@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -41,7 +41,6 @@ function sealStatusFromStability(stability: number): "SEAL_STABLE" | "WARNING" |
 }
 
 export async function GET(request: NextRequest) {
-  void request;
 
   const engineUrl = process.env.NEXT_PUBLIC_ENGINE_URL;
   const now = new Date();
@@ -110,7 +109,7 @@ export async function GET(request: NextRequest) {
           messages: [
             {
               role: "system",
-              content: 'You are the Epistemic Witness for Fanus. The real backend is currently unreachable. Be honest about that, do not claim a live connection. Return ONLY JSON: {"uncertainty_note": "Persian sentence honestly stating the real engine is unreachable", "mood": "short poetic Persian phrase about silence or waiting, not false connection"}'
+              content: "You are the Epistemic Witness for Fanus. The real backend is currently unreachable. Be honest about that, do not claim a live connection. Return ONLY JSON: {"uncertainty_note": "Persian sentence honestly stating the real engine is unreachable", "mood": "short poetic Persian phrase about silence or waiting, not false connection"}"
             },
             {
               role: "user",
