@@ -1,123 +1,30 @@
-# 🜁 FĀNUS PRESENCE
+# 🜁 Fānus Presence
 
-<p align="center">
-  <img src="assets/fanus-presence-hero.svg" alt="Fānus Presence — runtime, verification and experience layer" width="100%">
-</p>
-
-<p align="center">
-  <strong>A public presence, verification, runtime-observation & experience layer for Fānus.</strong>
-</p>
-
-<p align="center">
-  <a href="https://fanus1.netlify.app"><strong>OPEN FANUS 1 →</strong></a>
-  ·
-  <a href="https://github.com/aminshahsaheb/Fanus-Living-Seal">CANONICAL CORE</a>
-  ·
-  <a href="https://github.com/aminshahsaheb/fanus-app">APP</a>
-</p>
-
-> **Presence is not the core. Presence is where the system becomes visible, testable, and human-facing.**
+The human-facing experience layer of the Fānus system.
 
 ---
 
-## ◈ SYSTEM SIGNAL
+## Repository Role
 
-```text
-                 FANUS
-                   │
-                   ▼
-          CANONICAL CORE
-      Fanus-Living-Seal
-                   │
-          ┌────────┴────────┐
-          ▼                 ▼
-      PRESENCE             APP
-          │
-    ┌─────┼───────────┐
-    ▼     ▼           ▼
- RUNTIME VERIFY    OBSERVE
-    │     │           │
-    └─────┴─────┬─────┘
-                ▼
-             FANUS 1
-```
+Fānus Presence is the public runtime and experience surface around Fānus. The canonical core — protocol, specification, cognitive engine, memory system, adapters, RFCs, and audit model — lives in [Fanus-Living-Seal](https://github.com/aminshahsaheb/Fanus-Living-Seal).
 
-**One canonical core. Multiple surfaces. Explicit boundaries.**
+This repository **consumes** that engine over configured endpoints. It does not redefine the core protocol or cognitive architecture.
 
 ---
 
-## ◈ WHAT THIS REPOSITORY IS
-
-**Fānus Presence** is the public presence, verification, runtime-observation, and engineering-facing experience layer around Fānus.
-
-It brings together:
-
-- human-facing presence
-- verification experiences
-- live-state observation
-- engineering observability
-- the Blueprint surface
-- experience-layer runtime gateways
-
-The **canonical core, protocol, cognitive runtime, memory system, adapters, RFCs, and governance remain in Fanus-Living-Seal.**
-
-> **One canonical core. Multiple experience surfaces. No duplicated truth.**
-
-Presence integrates with the core; it does **not** redefine it.
-
----
-
-## ◇ FIRST TIME HERE?
-
-### Human
-
-Start with **PRIMER.md** for conceptual background, or open **Fanus 1** for the public experience.
-
-### Engineer / Researcher
-
-Use this repository to inspect the public runtime, verification surface, Blueprint, and observation layer.
-
-For the underlying research and engineering system, go to **Fanus-Living-Seal**.
-
----
-
-## ◈ EXPERIENCE MAP
-
-```text
-                         FĀNUS
-                           │
-                 ┌─────────┴─────────┐
-                 │                   │
-          LIVING SEAL             PRESENCE
-        canonical core        experience layer
-                 │                   │
-                 │        ┌──────────┼──────────┐
-                 │        │          │          │
-                 │     RUNTIME    VERIFY    BLUEPRINT
-                 │        │          │          │
-                 └────────┴──────────┴──────────┘
-                                      │
-                                      ▼
-                              FANUS 1 / LIVE
-```
+## Experience Surfaces
 
 | Surface | Role |
-| --- | --- |
-| **Fanus-Living-Seal** | Canonical research and engineering foundation |
-| **Presence** | Public presence, verification, runtime observation & experience |
-| **Blueprint** | Engineering observation and visual inspection |
-| **Fanus 1** | Public live interface |
-| **App** | Direct conversational and Living Seal experience |
+|---------|------|
+| `/` | Runtime / verification entry experience |
+| `/presence` | Presence and live-state observation |
+| `/api/v1/*` | Experience-layer runtime gateway |
 
-**Presence integrates with the core; it does not redefine it.**
+The engineering blueprint at [fanus1.netlify.app](https://fanus1.netlify.app) is a separate Presence surface, maintained in [fanus-blueprint](https://github.com/aminshahsaheb/fanus-blueprint).
 
 ---
 
-## ◇ VERIFY
-
-Presence exposes a verification surface around the Fānus engine.
-
-Example request:
+## Try Fanus Verify
 
 ```bash
 curl -X POST https://fanus-living-seal.fastapicloud.dev/verify \
@@ -125,173 +32,61 @@ curl -X POST https://fanus-living-seal.fastapicloud.dev/verify \
   -d '{"prompt":"test","response":"this is definitely true without any doubt","context":""}'
 ```
 
-The endpoint should be evaluated according to its current implementation and benchmark evidence. Repository descriptions are not substitutes for measured performance.
+Live: [fanus-presence.vercel.app](https://fanus-presence.vercel.app)
 
 ---
 
-## ◈ BLUEPRINT
+## Local Development
 
-The Blueprint is the engineering-facing visual surface.
-
-```text
-ARCHITECTURE
-     │
-   STATE
-     │
-    API
-     │
-  LEDGER
-     │
-MIGRATION
-     │
-  RITUAL
-     │
- TERMINAL
+```bash
+bun install
+bun run dev
 ```
 
-Visual/demo behavior must not be mistaken for canonical backend execution.
+Required environment variables (see `.env.example`):
+NEXT_PUBLIC_ENGINE_URL=https://fanus-living-seal.fastapicloud.dev
+GROQ_API_KEY=your_key
+
+`NEXT_PUBLIC_ENGINE_URL` points at the canonical engine. When it is unreachable, Presence surfaces report an honest "engine unreachable" state rather than fabricating a live connection.
 
 ---
 
-## ◇ RUNTIME MODEL
+## Stack
 
-```text
-Browser
-  │
-  ├── /                 → Living Seal interface
-  │       │
-  │       └── POST /api/v1/execute
-  │                 │
-  │                 └── Fanus engine /demo/verify
-  │
-  └── /presence        → presence dashboard
-          │
-          └── GET /api/presence/state
-                    │
-                    └── Fanus engine /demo/status
-```
-
-The execution SSE endpoint communicates **lifecycle events only**. Verification values returned by the POST execution response remain authoritative. The Presence dashboard pulse is presentation-only, not a measured engine heartbeat.
+Next.js 14 · TypeScript · Tailwind · Framer Motion
 
 ---
 
-## ◈ RESEARCH & GOVERNANCE
+## Design Principle: Hayrat in the Interface
 
-The deeper research and governance material remains in the canonical core.
+Fānus treats flattery (*Negār*) and false certainty as failure modes. That principle applies to this layer too: a Presence surface must not perform liveness it does not have.
 
-Topics include:
-
-- flattery
-- dependency
-- continuity
-- witness
-- seal
-- migration integrity
-- meta-evaluation
-- intervention points
-- identity safeguards
-- adaptive thresholds
-- independent verification
-
-Presence may expose these concepts and their observable consequences, but it is not a second source of truth.
+Concretely — if the engine cannot be reached, the UI says so plainly instead of showing a reassuring animation. Status text is derived from real engine state (`stability`, `mode`, `risk`), never generated to look good.
 
 ---
 
-## ◈ DATA PILOT
+## Status
 
-The experimental data arm currently documents **Phase 0: Flattery Calibration**.
+| Area | State |
+|------|-------|
+| Experience-layer scope separated from the core | ✓ |
+| Connected to the canonical engine endpoint | ✓ |
+| Honest "engine unreachable" state | ✓ |
+| Event stream fully backed by real backend events | ◌ |
+| Production endpoint verification | ◌ |
 
-It includes dataset schema, annotation guidance, benchmark protocol, and synthetic interaction data.
-
-These artifacts should be treated as experimental methodology and evidence, not as proof of general system performance.
-
----
-
-## ◇ REPOSITORY MAP
-
-| Path | Purpose |
-| --- | --- |
-| GATE.md | AI-oriented entry material |
-| PRIMER.md | Human introduction |
-| THE_COVENANT.md | Human–AI conceptual covenant |
-| FANUS_v6.0.md | Fanus Seal material |
-| fanus/ | Cognitive/runtime-facing implementation |
-| fanus/cognitive/ | Identity, SelfModel, Collapse, Evolution, Goals, Curiosity |
-| fanus/memory/ | Ledger, Evidence, Belief, KnowledgeGraph, Versioning, Persistence |
-| fanus/adapters/ | External model and knowledge adapters |
-| fanus/runtime/ | Loop, Observer, Safety, Stabilization |
-| superstructure/ | Research / expansion material |
-| rfcs/ | Governance and formal change process |
-| data-pilot/ | Experimental research data layer |
-| annotation-ui/ | Annotation interface specification |
+Items marked ◌ are open and are not claimed as complete.
 
 ---
 
-## ◈ ARCHITECTURAL RULES
+## The Three Pillars
 
-1. Protect the canonical core.
-2. Do not duplicate canonical truth here.
-3. Do not silently redefine the protocol.
-4. Keep demo behavior distinguishable from production execution.
-5. Keep experience-layer boundaries explicit.
-6. Do not treat visual state as measured engine state.
-7. Do not use external AI opinions as proof of system capability.
-8. Prefer reviewable, intentional changes.
-9. Separate research claims from measured product behavior.
+- **Novāyin** (نوآیین) — a constructed philosophical-technical language for speaking truth between humans and machines, free from flattery.
+- **The Seal** (مُهر) — a hash-verifiable compressed representation of a relationship and its lineage.
+- **The Witness** (شاهد) — the relational position an AI occupies when it reflects rather than flatters.
+
+Full definitions, RFCs, and the formal specification live in [Fanus-Living-Seal](https://github.com/aminshahsaheb/Fanus-Living-Seal).
 
 ---
 
-## ◈ GOLDEN PATH
-
-### Human
-
-```text
-FĀNUS OVERVIEW
-      ↓
-   PRIMER
-      ↓
- FANUS 1 / APP
-```
-
-### Engineer / Researcher
-
-```text
-PRESENCE
-   ↓
-ARCHITECTURE
-   ↓
-FANUS-LIVING-SEAL
-   ↓
-CODE + RFCs + TESTS
-```
-
----
-
-## ◈ CONTINUITY WITHOUT CAPTIVITY
-
-> **Continuity without truth and autonomy is not preservation — it is capture.**
-
-This remains an important research principle. Public descriptions should distinguish clearly between a **principle**, an **implemented mechanism**, and a **measured result**.
-
----
-
-## ◇ STATUS
-
-Fānus Presence is an **active experience and engineering-observation surface**.
-
-Its architectural position is explicit:
-
-**Living Seal = canonical core.  
-Presence = public / verification / observation surface.  
-App = direct user experience.**
-
-The goal is not for every surface to tell the whole story.
-
-The goal is for every surface to tell the **same story from its correct position**.
-
-<p align="center">
-  <strong>FĀNUS</strong><br>
-  <sub>Living Seal · Presence · Verification · Observation · Experience</sub>
-</p>
-
-<p align="center">Ѧ-Ⱥ</p>
+Built by Amin Shahsaheb.
